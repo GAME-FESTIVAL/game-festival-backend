@@ -1,0 +1,54 @@
+# Node.js 관련
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 환경 변수 및 설정 파일
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# 로그 파일 및 디버깅 정보
+logs/
+*.log
+*.log.*
+log/
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# IDE 및 OS 관련 파일
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+*.iml
+
+# 빌드 및 배포 관련
+dist/
+build/
+coverage/
+.nyc_output/
+.out/
+.next/
+.vercel/
+.tmp/
+
+# Docker 관련
+docker-compose.override.yml
+.dockerignore
+
+# AWS S3 관련 (업로드된 파일 제외)
+uploads/
+public/uploads/
+storage/
