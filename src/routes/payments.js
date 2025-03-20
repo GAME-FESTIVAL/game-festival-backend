@@ -26,9 +26,9 @@ router.post("/", auth, async (req, res, next) => {
 
   const orderedAt = new Date().toISOString();
 
-  const updatedCart = cart.filter(
-    ({ id }) => !cartDetail.some(({ _id }) => _id === id)
-  );
+  const updatedCart = cart
+    .filter(({ id }) => !cartDetail.some(({ _id }) => _id === id))
+    .map(({ id }) => id);
 
   try {
     await User.findOneAndUpdate(

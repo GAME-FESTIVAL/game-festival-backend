@@ -2,7 +2,7 @@ const { default: mongoose } = require("mongoose");
 
 const paymentSchema = mongoose.Schema(
   {
-    user: {
+    orderer: {
       id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

@@ -2,7 +2,7 @@ const { default: mongoose } = require("mongoose");
 
 const commentSchema = mongoose.Schema(
   {
-    postId: {
+    gameId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Game",
       required: true,
@@ -14,6 +14,10 @@ const commentSchema = mongoose.Schema(
     content: {
       type: String,
       required: true,
+    },
+    playTime: {
+      type: Number,
+      default: 0,
     },
     isRecommended: {
       type: Boolean,

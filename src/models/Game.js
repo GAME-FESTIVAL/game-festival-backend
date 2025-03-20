@@ -37,6 +37,10 @@ const gameSchema = mongoose.Schema(
         },
       ],
     },
+    wishlistCount: {
+      type: Number,
+      default: 0,
+    },
     discountPercentage: {
       type: Number,
       max: 100,
@@ -64,35 +68,35 @@ const gameSchema = mongoose.Schema(
       default: 0,
     },
     detailInfo: {
-      title: String,
       contentDescriptors: String,
       ageRating: Number,
-      ratingNumber: Number,
+      ratingNumber: String,
       ratingDate: Date,
-      distributionLicenseNumber: Number,
+      businessName: String,
+      distributionLicenseNumber: String,
       publisher: String,
       franchise: String,
       developer: String,
-      recommendedRequirements: {
-        os: String,
-        processor: String,
-        memory: String,
-        graphics: String,
-        network: String,
-        storage: String,
-      },
-      minimumRequirements: {
-        os: String,
-        processor: String,
-        memory: String,
-        graphics: String,
-        network: String,
-        storage: String,
-      },
+    },
+    recommendedRequirements: {
+      os: String,
+      processor: String,
+      memory: String,
+      graphics: String,
+      network: String,
+      storage: String,
+    },
+    minimumRequirements: {
+      os: String,
+      processor: String,
+      memory: String,
+      graphics: String,
+      network: String,
+      storage: String,
     },
   },
   {
-    timestamps: true, // createdAt, updatedAt 자동 생성
+    timestamps: true,
   }
 );
 

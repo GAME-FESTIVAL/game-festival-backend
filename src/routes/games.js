@@ -24,12 +24,12 @@ router.get("/", async (req, res, next) => {
 
     const sort = sortBy
       ? {
-          "popular": { reviewsCount: -1 }, // 인기순
-          "title": { title: 1 }, // 이름 오름차순
-          "price": { price: 1 }, // 가격 낮은 순
+          popular: { wishlistCount: -1 }, // 인기순
+          title: { title: 1 }, // 이름 오름차순
+          price: { price: 1 }, // 가격 낮은 순
           "-price": { price: -1 }, // 가격 높은 순
-          "discountPercentage": { discountPercentage: -1 }, // 할인 높은 순
-          "releaseAt": { releaseAt: -1 }, // 최신 출시일 기준
+          discountPercentage: { discountPercentage: -1 }, // 할인 높은 순
+          releaseAt: { releaseAt: -1 }, // 최신 출시일 기준
         }[sortBy]
       : {};
 

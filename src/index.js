@@ -25,7 +25,7 @@ fs.readdirSync(routesPath).forEach((file) => {
   }
 });
 
-app.use((err, _, res, _) => {
+app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.send(err.message || "서버에서 에러가 났습니다.");
 });

@@ -31,6 +31,22 @@ const userSchema = mongoose.Schema({
     ref: "Game",
     default: [],
   },
+  votedComments: {
+    type: [
+      {
+        commentId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Comment",
+          required: true,
+        },
+        voteType: {
+          type: String,
+          enum: ["helpful", "notHelpful"],
+          required: true,
+        },
+      },
+    ],
+  },
   orderHistory: {
     type: Array,
     default: [],
