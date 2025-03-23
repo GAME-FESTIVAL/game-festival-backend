@@ -26,18 +26,15 @@ router.post("/", auth, async (req, res, next) => {
 
   const orderedAt = new Date().toISOString();
 
-  const updatedCart = cart
+  const updateCart = cart
     .filter(({ id }) => !cartDetail.some(({ _id }) => _id === id))
     .map(({ id }) => id);
 
   try {
-    await User.findOneAndUpdate(
-      { _id: req.user._id },
-      {
-        $push: { orderHistory: { orderedGames, orderTotal, orderedAt } },
-        $set: { cart: updatedCart },
-      }
-    );
+    await User.findByIdAndUpdate(req.user._id, {
+      $push: { orderHistory: { orderedGames, orderTotal, orderedAt } },
+      $set: { cart: updateCart },
+    });
     await Payment.create({ orderer, orderedGames, orderTotal, orderedAt });
     return res.sendStatus(200);
   } catch (err) {

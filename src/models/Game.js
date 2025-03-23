@@ -47,17 +47,8 @@ const gameSchema = mongoose.Schema(
       default: 0,
     },
     discountPeriod: {
-      type: {
-        start: {
-          type: Date,
-          required: true,
-        },
-        end: {
-          type: Date,
-          required: true,
-        },
-      },
-      default: null,
+      start: Date,
+      end: Date,
     },
     averageRating: {
       type: Number,
@@ -71,7 +62,7 @@ const gameSchema = mongoose.Schema(
       contentDescriptors: String,
       ageRating: Number,
       ratingNumber: String,
-      ratingDate: Date,
+      ratingDate: String,
       businessName: String,
       distributionLicenseNumber: String,
       publisher: String,
@@ -113,6 +104,6 @@ gameSchema.index(
   // }
 );
 
-const Game = mongoose.model("Product", gameSchema);
+const Game = mongoose.model("Game", gameSchema);
 
 module.exports = Game;

@@ -8,7 +8,8 @@ const commentSchema = mongoose.Schema(
       required: true,
     },
     writer: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     content: {
@@ -42,6 +43,10 @@ const commentSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+
+commentSchema.index({
+  content: "text",
+});
 
 const Comment = mongoose.model("Comment", commentSchema);
 

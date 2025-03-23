@@ -13,13 +13,24 @@ router.get("/", async (req, res, next) => {
       minPrice,
       maxPrice = Infinity,
       sortBy,
+      releaseStatus = "released",
     } = req.query ?? {};
 
-    const filter = {};
+    const baseDate = new Date();
+    baseDate.setHours(0, 0, 0, 0);
+
+    const filter = {
+      releaseAt: { $lte: baseDate },
+    };
+
     if (searchTerm) filter["$text"] = { $search: searchTerm };
     if (category) filter["category"] = { $in: category.split(",") };
     if (minPrice) {
       filter["price"] = { $gte: Number(minPrice), $lte: Number(maxPrice) };
+    }
+    if (releaseStatus === "upcoming") {
+      baseDate.setDate(baseDate.getDate() + 1);
+      filter["releaseAt"] = { $gte: baseDate };
     }
 
     const sort = sortBy
@@ -31,7 +42,7 @@ router.get("/", async (req, res, next) => {
           discountPercentage: { discountPercentage: -1 }, // 할인 높은 순
           releaseAt: { releaseAt: -1 }, // 최신 출시일 기준
         }[sortBy]
-      : {};
+      : { createdAt: -1 };
 
     const limit = Number(size);
     const skip = (page - 1) * limit;
@@ -41,7 +52,7 @@ router.get("/", async (req, res, next) => {
       .limit(limit)
       .lean();
     const totalCount = await Game.countDocuments(filter);
-    const hasMore = page * limit < totalGames;
+    const hasMore = page * limit < totalCount;
 
     return res.status(200).json({ games, hasMore, totalCount });
   } catch (err) {
@@ -58,10 +69,19 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", auth, async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
-    await Game.Create(req.body);
+    await Game.create(req.body);
     return res.sendStatus(201);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/:id", auth, async (req, res, next) => {
+  try {
+    await Game.findByIdAndUpdate(req.params.id, req.body);
+    return res.sendStatus(200);
   } catch (err) {
     next(err);
   }

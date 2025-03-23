@@ -31,6 +31,10 @@ const userSchema = mongoose.Schema({
     ref: "Game",
     default: [],
   },
+  commentCount: {
+    type: Number,
+    default: 0,
+  },
   votedComments: {
     type: [
       {

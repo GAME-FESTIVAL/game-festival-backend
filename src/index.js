@@ -10,7 +10,12 @@ dotenv.config();
 const PORT = 8080;
 const routesPath = path.join(__dirname, "routes");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // ✅ 프론트 주소 명시
+    credentials: true, // ✅ 쿠키 인증 등 필요한 경우
+  })
+);
 
 app.use(express.json());
 mongoose

@@ -38,16 +38,22 @@ router.post("/upload", auth, uploadS3.single("file"), (req, res) => {
   });
 });
 
-router.post("/uploads", auth, uploadS3.array("file", 10), (req, res) => {
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ message: "파일 업로드 실패" });
+router.post(
+  "/uploads",
+  // auth,
+  uploadS3.array("files", 10),
+  (req, res) => {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "파일 업로드 실패" });
+    }
+    const result = req.files.map(({ location, originalname, size }) => ({
+      location,
+      originalname: Buffer.from(originalname, "latin1").toString("utf-8"),
+      size,
+    }));
+
+    res.json(result);
   }
-  const { location: locations, originalname, size } = req.file;
-  res.json({
-    locations,
-    originalname,
-    size,
-  });
-});
+);
 
 module.exports = router;
