@@ -10,10 +10,16 @@ dotenv.config();
 const PORT = 8080;
 const routesPath = path.join(__dirname, "routes");
 
+const allowedOrigins = ["http://localhost:3000"];
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // ✅ 프론트 주소 명시
-    credentials: true, // ✅ 쿠키 인증 등 필요한 경우
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      else return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
   })
 );
 
