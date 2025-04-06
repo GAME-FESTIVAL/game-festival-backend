@@ -69,22 +69,30 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
-  try {
-    await Game.create(req.body);
-    return res.sendStatus(201);
-  } catch (err) {
-    next(err);
+router.post(
+  "/",
+  // auth,
+  async (req, res, next) => {
+    try {
+      await Game.create(req.body);
+      return res.sendStatus(201);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
-router.patch("/:id", auth, async (req, res, next) => {
-  try {
-    await Game.findByIdAndUpdate(req.params.id, req.body);
-    return res.sendStatus(200);
-  } catch (err) {
-    next(err);
+router.patch(
+  "/:id",
+  // auth,
+  async (req, res, next) => {
+    try {
+      await Game.findByIdAndUpdate(req.params.id, req.body);
+      return res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 module.exports = router;
