@@ -3,14 +3,16 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const Comment = require("../models/Comment");
 
-router.get("/:userId", async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
-    const writer = req.params.userId;
     const { page = 1, size = 5 } = req.query ?? {};
     const limit = Number(size);
     const skip = (page - 1) * limit;
-    const games = await Comment.find({ writer }).skip(skip).limit(limit).lean();
-    const totalCount = await Comment.countDocuments({ writer });
+    const games = await Comment.find({ writer: req.params.id })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+    const totalCount = await Comment.countDocuments(filter);
     const hasMore = page * limit < totalCount;
 
     return res.status(200).json({ games, hasMore, totalCount });
