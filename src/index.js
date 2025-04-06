@@ -12,6 +12,10 @@ const routesPath = path.join(__dirname, "routes");
 
 const allowedOrigins = ["http://localhost:3000"];
 
+app.get("/", (req, res) => {
+  res.send("API 서버 살아있음!");
+});
+
 app.use(
   cors({
     origin: function (origin, callback) {
