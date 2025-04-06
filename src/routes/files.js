@@ -26,18 +26,6 @@ const uploadS3 = multer({
   }),
 });
 
-router.post("/upload", auth, uploadS3.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: "파일 업로드 실패" });
-  }
-  const { location, originalname, size } = req.file;
-  res.json({
-    location,
-    originalname: decodeURIComponent(originalname),
-    size,
-  });
-});
-
 router.post(
   "/uploads",
   // auth,

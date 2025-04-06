@@ -12,7 +12,11 @@ const gameSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    thumbnails: {
+    thumbnail: {
+      type: Array,
+      default: [],
+    },
+    screenshots: {
       type: Array,
       default: [],
     },
