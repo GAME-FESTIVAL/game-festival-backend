@@ -10,7 +10,7 @@ const createNewCommenter = async (req, res, next) => {
     const joinIndex = lastUser?.joinIndex ? lastUser.joinIndex + 1 : 1;
     const dummyCommenter = await User.create({
       nickname: `테스트유저${joinIndex}`,
-      email: `testUser${joinIndex}@gamefestival.com`,
+      email: `testuser${joinIndex}@gamefestival.com`,
       password: `test1234!`,
       gender: "male",
       joinIndex,
