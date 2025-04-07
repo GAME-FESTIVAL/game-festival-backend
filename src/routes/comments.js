@@ -97,17 +97,21 @@ router.patch("/:id", auth, async (req, res, next) => {
   }
 });
 
-router.delete("/:id", auth, async (req, res, next) => {
-  try {
-    // await Comment.findByIdAndUpdate(req.params.id, { deletedAt: new Date() });
-    await Comment.deleteOne({ _id: req.params.id }); // 그냥 hard delete 시키기로
-    await User.findByIdAndUpdate(req.body.userId, {
-      $inc: { commentCount: -1 },
-    });
-    res.sendStatus(200);
-  } catch (err) {
-    next(err);
+router.delete(
+  "/:id",
+  // auth,
+  async (req, res, next) => {
+    try {
+      // await Comment.findByIdAndUpdate(req.params.id, { deletedAt: new Date() });
+      await Comment.deleteOne({ _id: req.params.id }); // 그냥 hard delete 시키기로
+      await User.findByIdAndUpdate(req.body.userId, {
+        $inc: { commentCount: -1 },
+      });
+      res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 module.exports = router;
