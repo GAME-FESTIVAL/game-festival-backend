@@ -1,8 +1,11 @@
 const User = require("../models/User");
 
 const createNewCommenter = async (req, res, next) => {
-  if (!req.body.isNewUser) next();
   try {
+    if (req.body.writer !== "newUser") {
+      req.dummyCommenter = { _id: req.body.writer };
+      next();
+    }
     const lastUser = await User.findOne().sort({ joinIndex: -1 });
     const joinIndex = lastUser?.joinIndex ? lastUser.joinIndex + 1 : 1;
     const dummyCommenter = await User.create({
