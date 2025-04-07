@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
+const { createNewCommenter } = require("../middleware/comments");
 const Comment = require("../models/Comment");
 
 router.get("/:id", async (req, res, next) => {
@@ -8,14 +9,14 @@ router.get("/:id", async (req, res, next) => {
     const { page = 1, size = 5 } = req.query ?? {};
     const limit = Number(size);
     const skip = (page - 1) * limit;
-    const games = await Comment.find({ writer: req.params.id })
+    const comments = await Comment.find({ writer: req.params.id })
       .skip(skip)
       .limit(limit)
       .lean();
     const totalCount = await Comment.countDocuments(filter);
     const hasMore = page * limit < totalCount;
 
-    return res.status(200).json({ games, hasMore, totalCount });
+    return res.status(200).json({ comments, hasMore, totalCount });
   } catch (err) {
     next(err);
   }
@@ -55,8 +56,22 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", auth, async (req, res, next) => {
   try {
-    await Comment.create(req.body);
-    await User.findByIdAndUpdate(req.body.userId, {
+    const writer = req.user._id;
+    await Comment.create({ ...req.body, writer });
+    await User.findByIdAndUpdate(writer, {
+      $inc: { commentCount: 1 },
+    });
+    return res.sendStatus(201);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/dummy", createNewCommenter, async (req, res, next) => {
+  try {
+    const writer = req.dummyCommenter._id;
+    await Comment.create({ ...req.body, writer });
+    await User.findByIdAndUpdate(writer, {
       $inc: { commentCount: 1 },
     });
     return res.sendStatus(201);
@@ -76,7 +91,8 @@ router.patch("/:id", auth, async (req, res, next) => {
 
 router.delete("/:id", auth, async (req, res, next) => {
   try {
-    await Comment.findByIdAndUpdate(req.params.id, { deletedAt: new Date() });
+    // await Comment.findByIdAndUpdate(req.params.id, { deletedAt: new Date() });
+    await Comment.deleteOne({ _id: req.params.id }); // 그냥 hard delete 시키기로
     await User.findByIdAndUpdate(req.body.userId, {
       $inc: { commentCount: -1 },
     });

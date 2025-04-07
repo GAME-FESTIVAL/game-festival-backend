@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const userSchema = mongoose.Schema({
+  joinIndex: Number,
   nickname: {
     type: String,
     maxLength: 50,

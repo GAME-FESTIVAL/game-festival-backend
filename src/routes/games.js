@@ -95,4 +95,18 @@ router.patch(
   }
 );
 
+router.delete(
+  "/:id",
+  // auth,
+  async (req, res, next) => {
+    try {
+      // await Game.findByIdAndUpdate(req.params.id, { deletedAt: new Date() });
+      await Game.deleteOne({ _id: req.params.id }); // 그냥 hard delete 시키기로
+      return res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 module.exports = router;

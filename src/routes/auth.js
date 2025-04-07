@@ -6,8 +6,9 @@ const User = require("../models/User");
 
 router.post("/join", async (req, res, next) => {
   try {
-    const user = new User(req.body);
-    await user.save();
+    const lastUser = await User.findOne().sort({ joinIndex: -1 });
+    const joinIndex = lastUser?.joinIndex ? lastUser.joinIndex + 1 : 1;
+    await User.create({ ...req.body, joinIndex });
     return res.sendStatus(200);
   } catch (err) {
     next(err);
