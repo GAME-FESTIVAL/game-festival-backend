@@ -4,7 +4,7 @@ const createNewCommenter = async (req, res, next) => {
   try {
     if (req.body.writer !== "newUser") {
       req.dummyCommenter = { _id: req.body.writer };
-      next();
+      return next();
     }
     const lastUser = await User.findOne().sort({ joinIndex: -1 });
     const joinIndex = lastUser?.joinIndex ? lastUser.joinIndex + 1 : 1;

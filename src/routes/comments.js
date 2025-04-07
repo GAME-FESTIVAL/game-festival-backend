@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const { createNewCommenter } = require("../middleware/comments");
 const Comment = require("../models/Comment");
+const User = require("../models/User");
 
 router.get("/:id", async (req, res, next) => {
   try {
