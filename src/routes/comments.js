@@ -5,16 +5,16 @@ const { createNewCommenter } = require("../middleware/comments");
 const Comment = require("../models/Comment");
 const User = require("../models/User");
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:userId", async (req, res, next) => {
   try {
     const { page = 1, size = 5 } = req.query ?? {};
     const limit = Number(size);
     const skip = (page - 1) * limit;
-    const comments = await Comment.find({ writer: req.params.id })
+    const comments = await Comment.find({ writer: req.params.userId })
       .skip(skip)
       .limit(limit)
       .lean();
-    const totalCount = await Comment.countDocuments(filter);
+    const totalCount = await Comment.countDocuments();
     const hasMore = page * limit < totalCount;
 
     return res.status(200).json({ comments, hasMore, totalCount });
@@ -25,10 +25,16 @@ router.get("/:id", async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
   try {
-    const { page = 1, size = 10, rating, playTime, sortBy } = req.query ?? {};
+    const {
+      page = 1,
+      size = 10,
+      gameId,
+      rating,
+      playTime,
+      sortBy,
+    } = req.query ?? {};
 
-    const filter = {};
-
+    const filter = { gameId };
     if (playTime) filter["playTime"] = playTime;
     if (rating) filter["rating"] = rating;
 
