@@ -6,14 +6,18 @@ const Game = require("../models/Game");
 const Comment = require("../models/Comment");
 const throwError = require("../utils/throwError");
 
-router.get("/", auth, async (req, res) => {
-  try {
-    const users = await User.find().select("_id nickname");
-    res.status(200).json(users);
-  } catch (err) {
-    next(err);
+router.get(
+  "/",
+  // auth,
+  async (req, res) => {
+    try {
+      const users = await User.find().select("_id nickname");
+      res.status(200).json(users);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 router.get("/info", auth, async (req, res) => {
   return res.json({
