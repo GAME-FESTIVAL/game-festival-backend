@@ -47,7 +47,7 @@ router.get("/", async (req, res, next) => {
 
     const limit = Number(size);
     const skip = (page - 1) * limit;
-    const games = await Comment.find(filter)
+    const comments = await Comment.find(filter)
       .sort(sort)
       .skip(skip)
       .limit(limit)
@@ -55,7 +55,7 @@ router.get("/", async (req, res, next) => {
     const totalCount = await Comment.countDocuments(filter);
     const hasMore = page * limit < totalCount;
 
-    return res.status(200).json({ games, hasMore, totalCount });
+    return res.status(200).json({ comments, hasMore, totalCount });
   } catch (err) {
     next(err);
   }
