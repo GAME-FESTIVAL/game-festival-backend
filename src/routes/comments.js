@@ -51,6 +51,7 @@ router.get("/", async (req, res, next) => {
       .sort(sort)
       .skip(skip)
       .limit(limit)
+      .populate("writer", "_id nickname")
       .lean();
     const totalCount = await Comment.countDocuments(filter);
     const hasMore = page * limit < totalCount;
