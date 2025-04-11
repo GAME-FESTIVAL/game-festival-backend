@@ -20,7 +20,7 @@ const gameSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
-    category: {
+    categories: {
       type: Array,
       default: [],
     },
@@ -54,11 +54,11 @@ const gameSchema = mongoose.Schema(
       start: Date,
       end: Date,
     },
-    averageRating: {
+    totalRating: {
       type: Number,
       default: 0,
     },
-    recentRating: {
+    totalRater: {
       type: Number,
       default: 0,
     },

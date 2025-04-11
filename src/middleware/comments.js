@@ -20,4 +20,20 @@ const createNewCommenter = async (req, res, next) => {
   } catch (err) {}
 };
 
-module.exports = { createNewCommenter };
+const checkAlreadyCommented = async (req, res, next) => {
+  try {
+    const writer = req.user._id;
+    const { gameId } = req.body;
+    const existing = await Comment.findOne({ writer, gameId });
+    if (existing) {
+      return res
+        .status(409)
+        .json({ message: "이미 해당 게임에 리뷰를 작성했습니다." });
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createNewCommenter, checkAlreadyCommented };

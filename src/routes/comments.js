@@ -1,8 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
-const { createNewCommenter } = require("../middleware/comments");
+const {
+  createNewCommenter,
+  checkAlreadyCommented,
+} = require("../middleware/comments");
 const Comment = require("../models/Comment");
+const Game = require("../models/Game");
 const User = require("../models/User");
 
 router.get("/:userId", async (req, res, next) => {
@@ -62,12 +66,15 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", auth, async (req, res, next) => {
+router.post("/", auth, checkAlreadyCommented, async (req, res, next) => {
   try {
     const writer = req.user._id;
-    await Comment.create({ ...req.body, writer });
+    const comment = await Comment.create({ ...req.body, writer });
     await User.findByIdAndUpdate(writer, {
       $inc: { commentCount: 1 },
+    });
+    await Game.findByIdAndUpdate(comment.gameId, {
+      $inc: { totalRating: comment.rating, totalRater: 1 },
     });
     return res.sendStatus(201);
   } catch (err) {
@@ -75,22 +82,33 @@ router.post("/", auth, async (req, res, next) => {
   }
 });
 
-router.post("/dummy", createNewCommenter, async (req, res, next) => {
-  try {
-    const writer = req.dummyCommenter._id;
-    await Comment.create({ ...req.body, writer });
-    await User.findByIdAndUpdate(writer, {
-      $inc: { commentCount: 1 },
-    });
-    return res.sendStatus(201);
-  } catch (err) {
-    next(err);
+router.post(
+  "/dummy",
+  createNewCommenter,
+  checkAlreadyCommented,
+  async (req, res, next) => {
+    try {
+      const writer = req.dummyCommenter._id;
+      const comment = await Comment.create({ ...req.body, writer });
+      await User.findByIdAndUpdate(writer, {
+        $inc: { commentCount: 1 },
+      });
+      await Game.findByIdAndUpdate(comment.gameId, {
+        $inc: { totalRating: comment.rating, totalRater: 1 },
+      });
+      return res.sendStatus(201);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 router.patch("/:id", auth, async (req, res, next) => {
   try {
-    await Comment.findByIdAndUpdate(req.params.id, req.body);
+    const comment = await Comment.findByIdAndUpdate(req.params.id, req.body);
+    await Game.findByIdAndUpdate(comment.gameId, {
+      $inc: { totalRating: req.body.reting - comment.rating },
+    });
     return res.sendStatus(200);
   } catch (err) {
     next(err);
@@ -102,10 +120,14 @@ router.delete(
   // auth,
   async (req, res, next) => {
     try {
+      const writer = req?.userId || req.params?.writer;
       // await Comment.findByIdAndUpdate(req.params.id, { deletedAt: new Date() });
-      await Comment.deleteOne({ _id: req.params.id }); // 그냥 hard delete 시키기로
-      await User.findByIdAndUpdate(req.body.userId, {
+      const comment = await Comment.findOneAndDelete(req.params.id); // 그냥 hard delete 시키기로
+      await User.findByIdAndUpdate(writer, {
         $inc: { commentCount: -1 },
+      });
+      await Game.findByIdAndUpdate(comment.gameId, {
+        $inc: { totalRating: -comment.rating, totalRater: -1 },
       });
       res.sendStatus(200);
     } catch (err) {

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const Game = require("../models/Game");
+const Comment = require("../models/Comment");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -9,7 +10,7 @@ router.get("/", async (req, res, next) => {
       page = 1,
       size = 10,
       searchTerm,
-      category,
+      categories,
       minPrice,
       maxPrice = Infinity,
       sortBy,
@@ -24,7 +25,7 @@ router.get("/", async (req, res, next) => {
     };
 
     if (searchTerm) filter["$text"] = { $search: searchTerm };
-    if (category) filter["category"] = { $in: category.split(",") };
+    if (categories) filter["categories"] = { $in: categories.split(",") };
     if (minPrice) {
       filter["price"] = { $gte: Number(minPrice), $lte: Number(maxPrice) };
     }

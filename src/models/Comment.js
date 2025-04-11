@@ -24,6 +24,10 @@ const commentSchema = mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    rating: {
+      type: Number,
+      required: true,
+    },
     likes: {
       type: Number,
       default: 0,
