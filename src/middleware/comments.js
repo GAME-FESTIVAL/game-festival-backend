@@ -24,6 +24,7 @@ const createNewCommenter = async (req, res, next) => {
 const checkAlreadyCommented = async (req, res, next) => {
   try {
     const writer = req?.user?._id || req?.body?.writer;
+    if (writer === "newUser") return next();
     const { gameId } = req.body;
     const existing = await Comment.findOne({ writer, gameId });
     if (existing) {
