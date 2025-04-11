@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Comment = require("../models/Comment");
 
 const createNewCommenter = async (req, res, next) => {
   try {
