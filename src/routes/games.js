@@ -75,8 +75,10 @@ router.post(
   // auth,
   async (req, res, next) => {
     try {
-      await Game.create(req.body);
-      return res.sendStatus(201);
+      const lastGame = await Game.findOne().sort({ gameIndex: -1 });
+      const gameIndex = lastGame?.gameIndex ? lastGame.gameIndex + 1 : 1;
+      await Game.create({ ...req.body, gameIndex });
+      return res.sendStatus(201).json();
     } catch (err) {
       next(err);
     }
