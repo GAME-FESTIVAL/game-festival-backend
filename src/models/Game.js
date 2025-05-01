@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 
 const gameSchema = mongoose.Schema(
   {
+    gameIndex: Number,
     title: {
       type: String,
       required: true,
