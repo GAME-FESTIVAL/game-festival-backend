@@ -9,7 +9,7 @@ const Comment = require("../models/Comment");
 const Game = require("../models/Game");
 const User = require("../models/User");
 
-router.get("/:userId", async (req, res, next) => {
+router.get("/user/:userId", async (req, res, next) => {
   try {
     const { page = 1, size = 5 } = req.query ?? {};
     const limit = Number(size);
@@ -53,7 +53,7 @@ router.get("/:gameId", async (req, res, next) => {
     const totalCount = await Comment.countDocuments(filter);
     const hasMore = page * limit < totalCount;
 
-    return res.status(200).json({ comments, hasMore, totalCount });
+    return res.status(200).json({ comments, hasMore, totalCount, filter });
   } catch (err) {
     next(err);
   }
