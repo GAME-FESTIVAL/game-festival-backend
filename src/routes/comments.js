@@ -27,18 +27,11 @@ router.get("/:userId", async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res, next) => {
+router.get("/:gameId", async (req, res, next) => {
   try {
-    const {
-      page = 1,
-      size = 10,
-      gameId,
-      rating,
-      playTime,
-      sortBy,
-    } = req.query ?? {};
+    const { page = 1, size = 10, rating, playTime, sortBy } = req.query ?? {};
 
-    const filter = { gameId };
+    const filter = { gameId: req.params.gameId };
     if (playTime) filter["playTime"] = playTime;
     if (rating) filter["rating"] = rating;
 
