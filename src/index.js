@@ -42,7 +42,7 @@ fs.readdirSync(routesPath).forEach((file) => {
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.send(err.message || "서버에서 에러가 났습니다.");
+  res.send(err.message || "서버에서 에러가 발생했습니다.");
 });
 
 app.use(express.static(path.join(__dirname, "../uploads")));
